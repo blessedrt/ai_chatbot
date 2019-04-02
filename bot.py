@@ -135,7 +135,7 @@ def model_inputs():
     inputs = tf.placeholder(tf.int32, [None, None], name = 'input')
     targets = tf.placeholder(tf.int32, [None, None], name = 'target')
     lr = tf.placeholder(tf.float32, [None, None], name = 'learning_rate')
-    targets = tf.placeholder(tf.float32, [None, None], name = 'keep_prob')
+    keep_prob = tf.placeholder(tf.float32, [None, None], name = 'keep_prob')
     return inputs, targets, lr, keep_prob
     
 #preprocessing the targets    
@@ -238,7 +238,7 @@ def seq2seq_model(inputs, targets, keep_prob, batch_size, sequence_length, answe
                                                               answers_num_words + 1,
                                                               encoder_embedding_size,
                                                               initializer = tf.random_uniform_initializer(0, 1))
-    encoder_state = encoder_rnn(encoder_embedded_input, rnn_size, num_layers, keep_prob, sequence_length)
+    encoder_state = encoder_rnn_layer(encoder_embedded_input, rnn_size, num_layers, keep_prob, sequence_length)
     preprocessed_targets = preprocess_targets(targets, questionswords2int, batch_size)
     decoder_embeddings_matrix = tf.Variable(tf.random_uniform([questions_num_words + 1, decoder_embedding_size], 0, 1))
     decoder_embedded_input = tf.nn.embedding_lookup(decoder_embeddings_matrix, preprocessed_targets)
